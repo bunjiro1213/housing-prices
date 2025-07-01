@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.impute import SimpleImputer
@@ -47,7 +48,7 @@ def preprocessing(X):
 def main():
     train_df, test_df = load_data()
     X = train_df.drop("SalePrice", axis=1)
-    y = train_df["SalePrice"]
+    y = np.log(train_df["SalePrice"])
     
     preprocessor = preprocessing(X)
     model = RandomForestRegressor(random_state=600)
@@ -90,9 +91,9 @@ def main():
     test_preds = best_model.predict(test_df)
     submission = pd.DataFrame({
         'Id': test_df['Id'],
-        'SalePrice': test_preds
+        'SalePrice': np.exp(test_preds)
     })
-    submission.to_csv('submissio.csv', index=False)
+    submission.to_csv('submission.csv', index=False)
 
 if __name__ == "__main__":
     main()
