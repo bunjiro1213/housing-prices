@@ -5,11 +5,16 @@ test = pd.read_csv("../data/test.csv")
 def clean_housing_data(df):
     df['month+year'] = df['MoSold'].astype(str) + '.' + df['YrSold'].astype(str)
     df['totalbath'] = df['BsmtFullBath'] + (df['BsmtHalfBath'] * 0.6) + df['FullBath'] + (df['HalfBath'] * 0.5)
+    df['Totalsqft'] = df['TotalBsmtSF'] + df['1stFlrSF'] + df['2ndFlrSF'] + (df['PoolArea']*.2)
+    df['Age'] = df['YrSold'] - df['YearBuilt']
+    df['YearsSinceRemodel'] = df['YrSold'] - df['YearRemodAdd']
+    df['IsNewHouse'] = (df['Age'] <= 5)
     drop_cols = [
         'BsmtFullBath', 'BsmtHalfBath', 'FullBath', 'HalfBath', 'MoSold', 'YrSold',
         'MiscFeature', 'Alley', 'Fence', 'MasVnrType', 'FireplaceQu', 'LotFrontage',
-        'MiscVal', 'OverallCond', 'MSSubClass', 'PoolArea', 'ScreenPorch', '3SsnPorch', 
-        'EnclosedPorch', 'KitchenAbvGr', 'LowQualFinSF', 'BedroomAbvGr', 'BsmtFinSF2'
+        'MiscVal', 'PoolArea', 'ScreenPorch', '3SsnPorch', 
+        'EnclosedPorch', 'KitchenAbvGr', 'LowQualFinSF', 'BedroomAbvGr',
+        'TotalBsmtSF', '1stFlrSF', '2ndFlrSF', 'YearBuilt', 'YearRemodAdd'
     ]
     for col in drop_cols:
         if col in df.columns:
