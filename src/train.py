@@ -8,26 +8,36 @@ from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.ensemble import RandomForestRegressor
 from math import sqrt
 
-
+# Load the Cleaned csv files 
 def load_data():
     train = pd.read_csv("../data/train_cleaned.csv") 
     test = pd.read_csv("../data/test_cleaned.csv")
     return train, test
 
+# Create a preprocessing pipeline to make the data better for interpretation
 def preprocessing(X):
+
+    #Get the columns with numerical attributes and categorical attributes
     num_cols = X.select_dtypes(include=['int64', 'float64']).columns
     cat_cols = X.select_dtypes(exclude=['int64', 'float64']).columns
 
+
     numeric_transformer = Pipeline([
+        # Replace missing values with the median
         ('imputer', SimpleImputer(strategy='median')),
+        # Scale everything so it has a mean of 0 and sd of 1
         ('scaler', StandardScaler()),
     ])
     
+    #
     categorical_transformer = Pipeline([
+        # Replace missing values with the most frequent value
         ('imputer', SimpleImputer(strategy = 'most_frequent')),
+        # Transform everything using one hot encoding
         ('OneHotEncoder', OneHotEncoder(handle_unknown='ignore')),
     ])
 
+    # Apply the transformation to the categorical and numerical columns
     preprocessor = ColumnTransformer([
         ('num', numeric_transformer, num_cols),
         ('cat', categorical_transformer, cat_cols),
@@ -40,7 +50,7 @@ def main():
     y = train_df["SalePrice"]
     
     preprocessor = preprocessing(X)
-    model = RandomForestRegressor(random_state=44)
+    model = RandomForestRegressor(random_state=600)
 
     pipe = Pipeline([
         ('preprocessor', preprocessor),
@@ -54,7 +64,7 @@ def main():
 
 
     X_train, X_val, y_train, y_val = train_test_split(
-        X, y, test_size=0.2, random_state=44
+        X, y, test_size=0.2, random_state=600
     )
 
     grid_search = GridSearchCV(
@@ -82,7 +92,7 @@ def main():
         'Id': test_df['Id'],
         'SalePrice': test_preds
     })
-    submission.to_csv('submission.csv', index=False)
+    submission.to_csv('submissio.csv', index=False)
 
 if __name__ == "__main__":
     main()
