@@ -10,8 +10,8 @@ from math import sqrt
 
 
 def load_data():
-    train = pd.read_csv("../HousePrices/data/houses_filtered.csv") 
-    test = pd.read_csv("../HousePrices/data/test.csv")
+    train = pd.read_csv("../data/train_cleaned.csv") 
+    test = pd.read_csv("../data/test_cleaned.csv")
     return train, test
 
 def preprocessing(X):
