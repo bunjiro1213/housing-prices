@@ -82,9 +82,11 @@ def main():
 
     best_model = grid_search.best_estimator_
     y_pred = best_model.predict(X_val)
-    mse = mean_squared_error(y_val, y_pred)
+    y_pred_dollars = np.exp(y_pred)
+    y_val_dollars = np.exp(y_val)
+    mse = mean_squared_error(y_val_dollars, y_pred_dollars)
     rmse = sqrt(mse)
-    r2 = r2_score(y_val, y_pred)
+    r2 = r2_score(y_val_dollars, y_pred_dollars)
     print(f'RMSE: {rmse:.3f}')
     print(f'R2: {r2:.3f}')
 
