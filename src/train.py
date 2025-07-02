@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import joblib
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.impute import SimpleImputer
@@ -81,9 +82,11 @@ def main():
 
     best_model = grid_search.best_estimator_
     y_pred = best_model.predict(X_val)
-    mse = mean_squared_error(y_val, y_pred)
+    y_pred_dollars = np.exp(y_pred)
+    y_val_dollars = np.exp(y_val)
+    mse = mean_squared_error(y_val_dollars, y_pred_dollars)
     rmse = sqrt(mse)
-    r2 = r2_score(y_val, y_pred)
+    r2 = r2_score(y_val_dollars, y_pred_dollars)
     print(f'RMSE: {rmse:.3f}')
     print(f'R2: {r2:.3f}')
 
@@ -94,9 +97,8 @@ def main():
         'SalePrice': np.exp(test_preds)
     })
     submission.to_csv('submission.csv', index=False)
+    joblib.dump(best_model, "../models/best_model.pkl")
 
 if __name__ == "__main__":
     main()
-
-
 
