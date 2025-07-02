@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import joblib
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.impute import SimpleImputer
@@ -94,9 +95,8 @@ def main():
         'SalePrice': np.exp(test_preds)
     })
     submission.to_csv('submission.csv', index=False)
+    joblib.dump(best_model, "../models/best_model.pkl")
 
 if __name__ == "__main__":
     main()
-
-
 
